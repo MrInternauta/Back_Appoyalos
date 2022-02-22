@@ -19,6 +19,9 @@ Instala la dependencias de desarrollo
 ```sh
 $ cd carpeta
 $ npm install ó npm i
+$ npm i tsc -g
+$ npm install -g typescript
+
 ```
 
 ### Ejecución
