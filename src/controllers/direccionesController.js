@@ -1,5 +1,5 @@
 /*jshint esversion: 6 */
-import Direcciones from "../model/direccion";
+import Direcciones from '../model/direccion';
 
 /**
  * @author Felipe De Jesus 
@@ -20,25 +20,25 @@ export async function getAllByUserId(req, res) {
     let UserId = req.body.UserId ? req.body.UserId : req.params.UserId;
     let respuesta;
     console.log(UserId);
-    
+
     if (UserId == '-1') {
-      respuesta = await Direcciones.findAll(
-        { where: { idusuario: null  } }
-      );
-    }else {
-      respuesta = await Direcciones.findAll(
-        { where: { idusuario: UserId  } }
-      );
+      respuesta = await Direcciones.findAll({ where: { idusuario: null } });
+    } else {
+      respuesta = await Direcciones.findAll({ where: { idusuario: UserId } });
     }
-    
+
     console.log(respuesta);
-    
+
     const RESPONSE = { status: true, data: respuesta };
     return res.json(RESPONSE);
   } catch (error) {
     console.log(error);
 
-    const RESPONSE = { status: false, data: error, message: 'Error: No se pudo obtener la información' };
+    const RESPONSE = {
+      status: false,
+      data: error,
+      message: 'Error: No se pudo obtener la información',
+    };
     return res.status(500).json(RESPONSE);
   }
 }
@@ -56,23 +56,18 @@ export async function getAllByUserId(req, res) {
  * @returns {object} Retorna de respuesta una direccion
 */
 export async function getById(idDireccion, defaultDirecction, UserId) {
-  
   try {
     if (defaultDirecction == true) {
-      return await Direcciones.findOne(
-        { where: { default: defaultDirecction, idusuario: UserId }  }
-      );
+      return await Direcciones.findOne({
+        where: { default: defaultDirecction, idusuario: UserId },
+      });
     } else {
-      return await Direcciones.findOne(
-        { where: { id: idDireccion }  }
-      );
+      return await Direcciones.findOne({ where: { id: idDireccion } });
     }
-    
   } catch (error) {
     return error;
   }
 }
-
 
 /**
  * @author Felipe De Jesus 
@@ -95,7 +90,11 @@ export async function getDetails(req, res) {
     const RESPONSE = { status: true, data: { direccion } };
     return res.json(RESPONSE);
   } catch (error) {
-    const RESPONSE = { status: false, data: error, message: 'Error: No se pudo obtener la información' };
+    const RESPONSE = {
+      status: false,
+      data: error,
+      message: 'Error: No se pudo obtener la información',
+    };
     return res.status(500).json(RESPONSE);
   }
 }
@@ -117,11 +116,15 @@ export async function getDetails(req, res) {
 export async function getDefaultDireccionDetails(req, res) {
   let UserId = req.body.UserId ? req.body.UserId : req.params.UserId;
   try {
-    let direccion = await getById('', true, UserId );
+    let direccion = await getById('', true, UserId);
     const RESPONSE = { status: true, data: { direccion } };
     return res.json(RESPONSE);
   } catch (error) {
-    const RESPONSE = { status: false, data: error, message: 'Error: No se pudo obtener la información' };
+    const RESPONSE = {
+      status: false,
+      data: error,
+      message: 'Error: No se pudo obtener la información',
+    };
     return res.status(500).json(RESPONSE);
   }
 }
@@ -141,50 +144,43 @@ export async function getDefaultDireccionDetails(req, res) {
     }
 */
 export async function create(req, res) {
-  let {
-    idusuario,
-    descripcion,
-    latitud,
-    longitud,
-    defaultDireccion,
-    calle,
-    numero,
-    colonia,
-    municipio,
-    entidadfed, 
-    pais,
-    referencia
-  } = req.body;
+  let { idusuario, descripcion, latitud, longitud, defaultDireccion, calle, numero, colonia, municipio, entidadfed, pais, referencia } = req.body;
 
   try {
     //Si actualiza la direccion como predeterminada (cambia todas las otras a default: false)
-    if(defaultDireccion) {
+    if (defaultDireccion) {
       await setNotDefaultByUserId(idusuario);
-    }    
-   
-    let newDireccion  = await Direcciones.create(
-      { 
-        idusuario : idusuario ? idusuario : '',
-        descripcion:  descripcion ? descripcion: '',
-        latitud:  latitud ? latitud: '',
-        longitud:  longitud ? longitud: '',
-        default: defaultDireccion,
-        calle:  calle ? calle: '',
-        numero:  numero ? numero: '',
-        colonia:  colonia ? colonia: '',
-        municipio:  municipio ? municipio: '',
-        entidadfed:  entidadfed ? entidadfed: '', 
-        pais:  pais ? pais: '',
-        referencia:  referencia ? referencia: ''
-      }
-    );
+    }
+
+    let newDireccion = await Direcciones.create({
+      idusuario: idusuario ? idusuario : '',
+      descripcion: descripcion ? descripcion : '',
+      latitud: latitud ? latitud : '',
+      longitud: longitud ? longitud : '',
+      default: defaultDireccion,
+      calle: calle ? calle : '',
+      numero: numero ? numero : '',
+      colonia: colonia ? colonia : '',
+      municipio: municipio ? municipio : '',
+      entidadfed: entidadfed ? entidadfed : '',
+      pais: pais ? pais : '',
+      referencia: referencia ? referencia : '',
+    });
     if (newDireccion) {
-      const RESPONSE = { status: true, message: "Dirección creada correctamente", data: newDireccion};
+      const RESPONSE = {
+        status: true,
+        message: 'Dirección creada correctamente',
+        data: newDireccion,
+      };
       return res.json(RESPONSE);
     }
   } catch (error) {
     console.log(error);
-    const RESPONSE = { status: false, message: "Error: La dirección no pudo ser creada", data: error };
+    const RESPONSE = {
+      status: false,
+      message: 'Error: La dirección no pudo ser creada',
+      data: error,
+    };
     return res.status(500).json(RESPONSE);
   }
 }
@@ -209,7 +205,6 @@ export async function update(req, res) {
   else res.status(500).json(response);
 }
 
-
 /**
  * @author Felipe De Jesus 
  * @version 0.0.1
@@ -226,42 +221,29 @@ export async function update(req, res) {
 export async function updateDireccion(req) {
   try {
     let id = req.body.id ? req.body.id : req.params.id;
-    const {
-      idusuario,
-      descripcion,
-      latitud,
-      longitud,
-      defaultDireccion,
-      calle,
-      numero,
-      colonia,
-      municipio,
-      entidadfed, 
-      pais,
-      referencia
-    } = req.body;
+    const { idusuario, descripcion, latitud, longitud, defaultDireccion, calle, numero, colonia, municipio, entidadfed, pais, referencia } = req.body;
     //Si actualiza la direccion como predeterminada (cambia todas las otras a default: false)
-    if(defaultDireccion) {
+    if (defaultDireccion) {
       await setNotDefaultByUserId(idusuario);
     }
     const direcciones = await Direcciones.findAll({
       attributes: [
-        "id",
-        "idusuario",
-        "descripcion",
-        "latitud",
-        "longitud",
-        "default",
-        "calle",
-        "numero",
-        "colonia",
-        "municipio",
-        "entidadfed", 
-        "pais",
-        "referencia"
+        'id',
+        'idusuario',
+        'descripcion',
+        'latitud',
+        'longitud',
+        'default',
+        'calle',
+        'numero',
+        'colonia',
+        'municipio',
+        'entidadfed',
+        'pais',
+        'referencia',
       ],
       where: {
-        id
+        id,
       },
     });
     if (direcciones.length > 0) {
@@ -276,12 +258,12 @@ export async function updateDireccion(req) {
         numero,
         colonia,
         municipio,
-        entidadfed, 
+        entidadfed,
         pais,
-        referencia
+        referencia,
       });
-      
-      direcciones.forEach(async (direccionRow) => {
+
+      direcciones.forEach(async direccionRow => {
         await direccionRow.update({
           id,
           idusuario,
@@ -293,9 +275,9 @@ export async function updateDireccion(req) {
           numero,
           colonia,
           municipio,
-          entidadfed, 
+          entidadfed,
           pais,
-          referencia
+          referencia,
         });
       });
     }
@@ -306,10 +288,10 @@ export async function updateDireccion(req) {
     return RESPONSE;
   } catch (error) {
     console.log(error);
-    
+
     const RESPONSE = {
       status: false,
-      message: "Error: Could not update",
+      message: 'Error: Could not update',
       data: error,
     };
     return RESPONSE;
@@ -332,19 +314,15 @@ export async function updateDireccion(req) {
 export async function setNotDefaultByUserId(UserId) {
   try {
     const direcciones = await Direcciones.findAll({
-      attributes: [
-        "id",
-        "idusuario",
-        "default"
-      ],
+      attributes: ['id', 'idusuario', 'default'],
       where: {
-        idusuario: UserId
-      }
+        idusuario: UserId,
+      },
     });
     if (direcciones.length > 0) {
-      direcciones.forEach(async (direccionRow) => {
+      direcciones.forEach(async direccionRow => {
         await direccionRow.update({
-          default: false //Establece todas las direcciones del usuario como false
+          default: false, //Establece todas las direcciones del usuario como false
         });
       });
     }
@@ -353,14 +331,14 @@ export async function setNotDefaultByUserId(UserId) {
       data: direcciones,
     };
     console.log(direcciones);
-    
+
     return RESPONSE;
   } catch (error) {
     console.log(error);
-    
+
     const RESPONSE = {
       status: false,
-      message: "Error: No se pudo actualizar",
+      message: 'Error: No se pudo actualizar',
       data: error,
     };
     return RESPONSE;
@@ -371,31 +349,30 @@ export async function deleteDirection(req, res) {
   let id = req.body.id ? req.body.id : req.params.id;
 
   console.log(id);
-  
+
   try {
-    let default_direccion =  await getById(id, false, '');
+    let default_direccion = await getById(id, false, '');
     if (default_direccion == null) {
       return res.json({
         status: false,
-        message: 'No existe la dirección'
+        message: 'No existe la dirección',
       });
     }
     if (default_direccion.default) {
       return res.json({
         status: false,
-        message: 'No puede eliminar la dirección predeterminada'
+        message: 'No puede eliminar la dirección predeterminada',
       });
     }
     const direccion = await Direcciones.destroy({ where: { id } });
     res.json({
       status: true,
-      message: direccion >= 1 ? 'Se eliminó la dirección correctamente' : 'La dirección no existe'
+      message: direccion >= 1 ? 'Se eliminó la dirección correctamente' : 'La dirección no existe',
     });
-    
   } catch (error) {
     return res.json({
       status: false,
-      message: 'No puede eliminar la dirección'
+      message: 'No puede eliminar la dirección',
     });
   }
 }

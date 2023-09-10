@@ -1,21 +1,31 @@
-import jwt from "jsonwebtoken";
 import { Request, Response } from 'express';
-import { JWT_DATA } from '../configs/Config';
-import {StatusCodes} from '../helpers/StatusCodes'
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
-export let VerifyToken = (req: Request, res: Response, next: Function) => {
-  const TOKEN: string = req.get("token") || '';
-  
+import { JWT_DATA } from '../configs/Config';
+import { StatusCodes } from '../helpers/StatusCodes';
+
+export const VerifyToken = (req: Request, res: Response, next: () => void) => {
+  const TOKEN: string = req.get('token') || '';
+
   jwt.verify(TOKEN, JWT_DATA.JWB_SEED, (error, decoded) => {
-    if (error) {
-      return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .json({
+    if (error || !decoded || (decoded && typeof decoded === 'string')) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
         ok: false,
-        message: 'Token no valido.'
+        message: 'Token no valido.',
       });
     }
-      req.params.usuario = decoded && decoded.usuario ? decoded.usuario : null;
-      next();
+    if (!instanceOfJwtPayload(decoded)) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        ok: false,
+        message: 'Token no valido.',
+      });
+    }
+    req.params.usuario = decoded?.usuario ? decoded?.usuario : null;
+    next();
   });
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function instanceOfJwtPayload(object: any): object is JwtPayload {
+  return 'usuario' in object;
+}

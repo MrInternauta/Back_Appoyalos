@@ -1,59 +1,59 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ModelOptions, Sequelize, ModelCtor, Model, ModelAttributes } from 'sequelize';
-import { SEQUELIZE_CONFIG } from "../configs/Database";
+import { SEQUELIZE_CONFIG } from '../configs/Database';
 const TABLE_NAME = 'usuarios';
 
-const modelo = function Modelo(sequelize: Sequelize, DataTypes: any ): ModelCtor<Model>{
-  
-  let modelOption: ModelOptions = {
-    tableName: TABLE_NAME
+const modelo = function Modelo(sequelize: Sequelize, DataTypes: any): ModelCtor<Model> {
+  const modelOption: ModelOptions = {
+    tableName: TABLE_NAME,
   };
 
-  let atributesTable: ModelAttributes<Model, any> = {
+  const atributesTable: ModelAttributes<Model, any> = {
     idusuarios: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     contrasena: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
     },
     correo: {
       type: DataTypes.STRING(40),
-      allowNull: false
+      allowNull: false,
     },
     telefono: {
       type: DataTypes.STRING(10),
-      allowNull: false
+      allowNull: false,
     },
     fechanac: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
     },
     imagenurl: {
       type: DataTypes.STRING(45),
-      allowNull: true
+      allowNull: true,
     },
     genero: {
       type: DataTypes.STRING(1),
-      allowNull: true
+      allowNull: true,
     },
     nombre: {
       type: DataTypes.STRING(32),
-      allowNull: false
+      allowNull: false,
     },
     apellidomat: {
       type: DataTypes.STRING(32),
-      allowNull: false
+      allowNull: false,
     },
     apellidopat: {
       type: DataTypes.STRING(32),
-      allowNull: false
+      allowNull: false,
     },
     curp: {
       type: DataTypes.STRING(18),
-      allowNull: true
+      allowNull: true,
     },
     idtipouser: {
       type: DataTypes.INTEGER,
@@ -62,19 +62,19 @@ const modelo = function Modelo(sequelize: Sequelize, DataTypes: any ): ModelCtor
         model: {
           tableName: 'tiposusuarios',
         },
-        key: 'idtipouser'
-      }
+        key: 'idtipouser',
+      },
     },
     idsocket: {
       type: DataTypes.STRING(45),
-      allowNull: true
+      allowNull: true,
     },
     activo: {
       type: DataTypes.BOOLEAN,
-    }
+    },
   };
   return sequelize.define(TABLE_NAME, atributesTable, modelOption);
 };
 
-const MODELO =  modelo(SEQUELIZE_CONFIG, Sequelize);
+const MODELO = modelo(SEQUELIZE_CONFIG, Sequelize);
 export default MODELO;

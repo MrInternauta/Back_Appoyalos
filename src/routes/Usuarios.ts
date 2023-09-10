@@ -1,6 +1,6 @@
-import {Router} from 'express';
-import { VerifyToken }  from '../middlewares/Autenticacion';
-import { getAll, getOne, create, remove, update }  from '../controllers/Usuario'
+import { Router } from 'express';
+import { VerifyToken } from '../middlewares/Autenticacion';
+import { getAll, getOne, create, remove, update } from '../controllers/Usuario';
 const router: Router = Router();
 
 router.get('/usuarios', getAll);
@@ -13,8 +13,3 @@ router.put('/usuario/:id', VerifyToken, update);
 router.put('/usuario/', VerifyToken, update);
 
 export default router;
-
-
-
-
-

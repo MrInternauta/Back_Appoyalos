@@ -1,20 +1,19 @@
 /*jshint esversion: 6 */
-import Request from "request";
-import {} from "../config/config";
+import Request from 'request';
+import {} from '../config/config';
 import fs from 'fs';
 import ejs from 'ejs';
-
 
 export async function enviarEmail(opcionesEmail) {
   try {
     const urlToSend = `${process.env.SendEmailURL}`;
     Request.post(
       {
-        headers: { "content-type": "application/x-www-form-urlencoded" },
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
         url: urlToSend,
         form: opcionesEmail,
       },
-      (error, response, body) => {
+      error => {
         if (error) {
           return console.log(error);
         }
@@ -35,17 +34,13 @@ export async function enviarEmail(opcionesEmail) {
 
  */
 export async function Htmlrender(req, res) {
-    try {
-      let idPedido = req.body.idPedido
-      ? req.body.idPedido
-      : req.params.idPedido;
+  try {
+    let idPedido = req.body.idPedido ? req.body.idPedido : req.params.idPedido;
     let html = await CreateHtmlpedido(idPedido);
     res.end(html);
-      
-    } catch (error) {
-        console.log(error);
-        
-    }  
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 /**
@@ -58,57 +53,54 @@ export async function Htmlrender(req, res) {
  * @param {boolean} test test o no si es test no envia el email y retorna un html (true no envia)
 
  */
-export async function  CreateHtmlpedido(idPedido, test = false){
-    try {
-      let req = {
-        params: {
-          idPedido
-        },
-        body:{
-          idPedido
-        }
-        
-      };
-      console.log("IDPEDIDOOO", idPedido);
-        // getOneOrderDetail(req, true).then( async function (RESPONSE) {
-        //   let pedido = RESPONSE.data[0];
-        //   console.log("PEDIDOOO",pedido);
-        //   console.log("DETALLEPEDIDOOO",pedido.dataValues.detallepedidos);
+export async function CreateHtmlpedido(idPedido) {
+  try {
+    const req = {
+      params: {
+        idPedido,
+      },
+      body: {
+        idPedido,
+      },
+    };
+    console.log('IDPEDIDOOO', req);
+    // getOneOrderDetail(req, true).then( async function (RESPONSE) {
+    //   let pedido = RESPONSE.data[0];
+    //   console.log("PEDIDOOO",pedido);
+    //   console.log("DETALLEPEDIDOOO",pedido.dataValues.detallepedidos);
 
-        //   let opciones = {
-        //       archivo: 'pedido',
-        //       subject: 'Nuevo Pedido No. '+ pedido.folio,
-        //       usuario: pedido.dataValues.usuario[0]
-        //   };
-      
-        //   //Leer archivo email
-        //   const archivo = __dirname +  `/../views/email/${opciones.archivo}.ejs`;
-        //   //compilarlo
-        //   const compilado =  ejs.compile(fs.readFileSync(archivo, 'utf8'));
-        //   //crear HTML
-        //   const html =  compilado({
-        //       pedido
-        //   });
-        //       //configurar opciones
-        //   const opcionesEmail = {
-        //     from: "Abastos del rio <noreply@geniuscode.mx>",
-        //     email: opciones.usuario.correoele,
-        //     asunto: opciones.subject,
-        //     html,
-        //   };
-        //   if (!test) {
-        //     let sendEmailRes = await enviarEmail(opcionesEmail);
-        //     console.log('Mensaje enviado', sendEmailRes);
-        //   }
-        //   return html;
-        // }).catch(function(error) {
-        //   console.log(error);
-        // })
+    //   let opciones = {
+    //       archivo: 'pedido',
+    //       subject: 'Nuevo Pedido No. '+ pedido.folio,
+    //       usuario: pedido.dataValues.usuario[0]
+    //   };
 
-        
-    } catch (error) {
-        console.log(error);
-    }
+    //   //Leer archivo email
+    //   const archivo = __dirname +  `/../views/email/${opciones.archivo}.ejs`;
+    //   //compilarlo
+    //   const compilado =  ejs.compile(fs.readFileSync(archivo, 'utf8'));
+    //   //crear HTML
+    //   const html =  compilado({
+    //       pedido
+    //   });
+    //       //configurar opciones
+    //   const opcionesEmail = {
+    //     from: "Abastos del rio <noreply@geniuscode.mx>",
+    //     email: opciones.usuario.correoele,
+    //     asunto: opciones.subject,
+    //     html,
+    //   };
+    //   if (!test) {
+    //     let sendEmailRes = await enviarEmail(opcionesEmail);
+    //     console.log('Mensaje enviado', sendEmailRes);
+    //   }
+    //   return html;
+    // }).catch(function(error) {
+    //   console.log(error);
+    // })
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 /**
@@ -125,30 +117,26 @@ export async function  CreateHtmlpedido(idPedido, test = false){
         archivo: 'confirmar-cuenta'
       }
  */
-export async function  CreateHtmlSignIn(opciones){
+export async function CreateHtmlSignIn(opciones) {
   try {
     //Leer archivo email
     const archivo = __dirname + `/../views/email/${opciones.archivo}.ejs`;
     //compilarlo
-    const compilado = ejs.compile(fs.readFileSync(archivo, "utf8"));
+    const compilado = ejs.compile(fs.readFileSync(archivo, 'utf8'));
     //crear HTML
     const html = compilado({
       url: opciones.url,
     });
     //configurar opciones
     const opcionesEmail = {
-      from: "Abastos del rio <noreply@geniuscode.mx>",
+      from: 'Abastos del rio <noreply@geniuscode.mx>',
       email: opciones.usuario.correoele,
       asunto: opciones.subject,
       html,
     };
     let sendEmailRes = await enviarEmail(opcionesEmail);
     console.log('Mensaje enviado', sendEmailRes);
-
   } catch (error) {
     console.log(error);
   }
 }
-
-
-

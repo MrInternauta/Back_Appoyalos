@@ -1,5 +1,5 @@
 /*jshint esversion: 6 */
-import Categorias from "../model/categorias";
+import Categorias from '../model/categorias';
 
 /**
  * @author Felipe De Jesus 
@@ -23,7 +23,11 @@ export async function getAll(req, res) {
     return res.json(RESPONSE);
   } catch (error) {
     console.log(error);
-    const RESPONSE = { status: false, data: error, message: "Error: No se pudo obtener la información." };
+    const RESPONSE = {
+      status: false,
+      data: error,
+      message: 'Error: No se pudo obtener la información.',
+    };
     return res.status(500).json(RESPONSE);
   }
 }

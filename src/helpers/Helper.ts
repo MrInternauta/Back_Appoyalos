@@ -1,6 +1,6 @@
-import { JWT_DATA } from '../configs/Config'
+import { JWT_DATA } from '../configs/Config';
 import bcrypt from 'bcrypt';
-import {SEQUELIZE_CONFIG} from '../configs/Database'
+import { SEQUELIZE_CONFIG } from '../configs/Database';
 import { QueryTypes } from 'sequelize';
 
 /**
@@ -22,9 +22,10 @@ export const generateContrasena = (contrasena: string) => bcrypt.hashSync(contra
  * @param {any} remplace objeto con parametros de busqueda si aplica
  * @returns {Promise<any>} Retorna la promesa de la consulta
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function executeSelect(sql: string, remplace: any) {
-    return SEQUELIZE_CONFIG.query(sql, {
-        replacements: remplace,
-        type: QueryTypes.SELECT
-    });
+  return SEQUELIZE_CONFIG.query(sql, {
+    replacements: remplace,
+    type: QueryTypes.SELECT,
+  });
 }

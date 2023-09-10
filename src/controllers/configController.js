@@ -20,7 +20,11 @@ export async function getCurrentVersion(req, res) {
     const RESPONSE = { status: true, version: process.env.APPVERSION };
     return res.json(RESPONSE);
   } catch (error) {
-    const RESPONSE = { status: false, data: error, message: "Error: No se pudo obtener la información." };
+    const RESPONSE = {
+      status: false,
+      data: error,
+      message: 'Error: No se pudo obtener la información.',
+    };
     return res.status(500).json(RESPONSE);
   }
 }
